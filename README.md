@@ -1,6 +1,6 @@
 # Projekt Stacji Pogodowej (Klient-Serwer)
 
-Projekt zaliczeniowy z przedmiotu Zaawansowane [...] na kierunku Fizyka Techniczna, Politechnika Warszawska.
+Projekt zaliczeniowy z przedmiotu Zaawansowane Programowanie w Pythonie na kierunku Fizyka Techniczna, Politechnika Warszawska.
 
 ## Cel projektu
 Zbudowanie dwuczęściowego systemu do pomiaru parametrów środowiskowych i ich bezprzewodowego przesyłania. Całość opiera się na mikrokontrolerach z układem RP2040 z wykorzystaniem środowiska MicroPython. System działa w architekturze klient-serwer w sieci lokalnej Wi-Fi.
@@ -24,10 +24,3 @@ Skrypt klienta (Inky Frame) po połączeniu z siecią Wi-Fi nawiązuje połącze
 ## Instrukcja uruchomienia
 
 Przed uruchomieniem skryptów na mikrokontrolerach należy wgrać dedykowany firmware MicroPython od firmy Pimoroni (zawierający wbudowane moduły takie jak `picographics` czy `breakout_bme280`).
-
-Na obu urządzeniach trzeba utworzyć plik `secret.py` z danymi do sieci:
-
-```python
-WIFI_SSID = "nazwa_sieci"
-WIFI_PASS = "haslo_do_sieci"
-IP_STACJI = "192.168.x.x" # Zmienna wymagana tylko na Inky Frame
