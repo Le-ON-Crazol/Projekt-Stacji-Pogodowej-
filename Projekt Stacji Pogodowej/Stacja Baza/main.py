@@ -13,7 +13,7 @@ bme = BreakoutBME280(i2c)
 
 gp = GfxPack()
 display = gp.display
-gp.set_backlight(0, 0, 0, 100) # Delikatne, białe podświetlenie
+gp.set_backlight(0, 0, 0, 100) 
 
 # --- Połączenie z Wi-Fi ---
 wlan = network.WLAN(network.STA_IF)
