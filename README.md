@@ -1,6 +1,6 @@
 # Projekt Stacji Pogodowej (Klient-Serwer)
 
-Projekt zaliczeniowy z przedmiotu Zaawansowane [...] na kierunku Fizyka Techniczna, Politechnika Warszawska.
+Projekt zaliczeniowy z przedmiotu Zaawansowane Programowanie w Pythonie na kierunku Fizyka Techniczna, Politechnika Warszawska.
 
 ## Cel projektu
 Zbudowanie dwuczęściowego systemu do pomiaru parametrów środowiskowych i ich bezprzewodowego przesyłania. Całość opiera się na mikrokontrolerach z układem RP2040 z wykorzystaniem środowiska MicroPython. System działa w architekturze klient-serwer w sieci lokalnej Wi-Fi.
