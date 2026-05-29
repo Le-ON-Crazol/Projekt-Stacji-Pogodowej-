@@ -1,17 +1,17 @@
 import network
-import socket  # Zmiana: używamy surowych gniazd
+import socket  
 import json
 import time
 import secret
 from picographics import PicoGraphics, DISPLAY_INKY_FRAME_4
 
-# --- Inicjalizacja wyświetlacza ---
+# Inicjalizacja wyświetlacza
 display = PicoGraphics(display=DISPLAY_INKY_FRAME_4)
 BLACK = 0
 WHITE = 1
 RED = 4
 
-# --- Połączenie z Wi-Fi ---
+#  Łączenie z Wi-Fi
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 wlan.connect(secret.WIFI_SSID, secret.WIFI_PASS)
@@ -21,21 +21,17 @@ while not wlan.isconnected():
     time.sleep(1)
 print("Połączono!")
 
-# Upewniamy się, że mamy czysty adres IP bez dopisku "http://"
 ip_serwera = secret.IP_STACJI.replace("http://", "").replace("/", "")
 
 while True:
     try:
         print(f"Pobieranie danych z {ip_serwera} przez socket...")
         
-        # 1. Tworzymy i łączymy gniazdo
         s = socket.socket()
         s.connect((ip_serwera, 80))
         
-        # 2. Wysyłamy najprostsze możliwe żądanie HTTP GET
         s.send(b"GET / HTTP/1.0\r\n\r\n")
         
-        # 3. Odbieramy całą odpowiedź z serwera w pętli
         odpowiedz_bajty = b""
         while True:
             chunk = s.recv(512)
@@ -45,14 +41,10 @@ while True:
             
         s.close()
         
-        # 4. Dekodujemy odpowiedź
         odpowiedz_tekst = odpowiedz_bajty.decode('utf-8')
-        
-        # Serwer wysyła najpierw nagłówki, potem pustą linię (\r\n\r\n), a na końcu JSON
-        # Rozdzielamy tekst w tym miejscu, aby wyciągnąć tylko dane
         cialo_json = odpowiedz_tekst.split("\r\n\r\n")[1]
         
-        # 5. Zamieniamy tekst na słownik
+        # Ładowanie z pliku jason
         dane = json.loads(cialo_json)
         
         temp = dane["temp"]
@@ -61,7 +53,7 @@ while True:
         
         print(f"Sukces! Odebrano: {temp}C, {pres}hPa, {hum}%")
         
-        # --- Rysowanie po ekranie E-ink ---
+        # Wyświetlanie danych na e-inku
         display.set_pen(WHITE)
         display.clear()
         
