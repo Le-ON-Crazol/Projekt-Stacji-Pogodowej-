@@ -1,17 +1,17 @@
 import network
-import socket  
+import socket  # Zmiana: używamy surowych gniazd
 import json
 import time
 import secret
 from picographics import PicoGraphics, DISPLAY_INKY_FRAME_4
 
-# Inicjalizacja wyświetlacza
+
 display = PicoGraphics(display=DISPLAY_INKY_FRAME_4)
 BLACK = 0
 WHITE = 1
 RED = 4
 
-#  Łączenie z Wi-Fi
+
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 wlan.connect(secret.WIFI_SSID, secret.WIFI_PASS)
@@ -40,11 +40,12 @@ while True:
             odpowiedz_bajty += chunk
             
         s.close()
-        
+                
         odpowiedz_tekst = odpowiedz_bajty.decode('utf-8')
-        cialo_json = odpowiedz_tekst.split("\r\n\r\n")[1]
         
-        # Ładowanie z pliku jason
+        # Serwer wysyła najpierw nagłówki, potem pustą linię (\r\n\r\n), a na końcu JSON        
+        cialo_json = odpowiedz_tekst.split("\r\n\r\n")[1]
+                
         dane = json.loads(cialo_json)
         
         temp = dane["temp"]
@@ -53,7 +54,7 @@ while True:
         
         print(f"Sukces! Odebrano: {temp}C, {pres}hPa, {hum}%")
         
-        # Wyświetlanie danych na e-inku
+        # --- Rysowanie po ekranie E-ink ---
         display.set_pen(WHITE)
         display.clear()
         

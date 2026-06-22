@@ -7,7 +7,7 @@ from pimoroni_i2c import PimoroniI2C
 from breakout_bme280 import BreakoutBME280
 from gfx_pack import GfxPack
 
-# Inicjalizacja sprzętu 
+# --- Inicjalizacja sprzętu ---
 i2c = PimoroniI2C(sda=4, scl=5)
 bme = BreakoutBME280(i2c)
 
@@ -15,7 +15,7 @@ gp = GfxPack()
 display = gp.display
 gp.set_backlight(0, 0, 0, 100) 
 
-# Łączenie z Wi-Fi
+# --- Połączenie z Wi-Fi ---
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 wlan.connect(secret.WIFI_SSID, secret.WIFI_PASS)
@@ -34,20 +34,17 @@ print(f"=====================================")
 print(f"SKOPIUJ TEN ADRES DO secret.py: {ip_serwera}")
 print(f"=====================================")
 
-# Konfiguracja serwera HTTP 
+# --- Konfiguracja serwera HTTP ---
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(('', 80))
 s.listen(1)
-# KRYTYCZNE: Ustawiamy timeout na 2 sekundy. Gniazdo nie zablokuje pętli!
 s.settimeout(2.0) 
 
 print("Serwer dziala. Odswiezanie ekranu aktywne.")
 
 while True:
-    # Odczyt danych z czujnika
     temperature, pressure, humidity = bme.read()
     
-    #  Aktualizacja lokalnego ekranu
     display.set_pen(0)
     display.clear()
     display.set_pen(15)
@@ -58,12 +55,11 @@ while True:
     display.text(f"W: {humidity:.0f} %", 5, 52, 128, 2)
     display.update()
 
-    # 3. Obsługa żądań HTTP 
+# 3. Obsługa żądań HTTP (z timeoutem)
     try:
         klient, adres = s.accept()
         print(f"Zapytanie od: {adres}")
         
-        # KRYTYCZNE: Zabezpieczamy samo połączenie z klientem (dajemy mu 5 sekund na dogadanie się)
         klient.settimeout(5.0)
         
         request = klient.recv(1024)
@@ -73,11 +69,10 @@ while True:
             "pres": round(pressure / 100, 0),
             "hum": round(humidity, 0)
         }
-    
+            
         cialo_odpowiedzi = json.dumps(dane_pogodowe)
         dlugosc = len(cialo_odpowiedzi)
-        
-        #  Protokół HTTP
+            
         odpowiedz_http = (
             "HTTP/1.0 200 OK\r\n"
             "Content-Type: application/json\r\n"
@@ -88,8 +83,7 @@ while True:
         )
         
         klient.sendall(odpowiedz_http.encode('utf-8'))
-        
-        # KRYTYCZNE: Dajemy Inky Frame solidne pół sekundy na przeczytanie danych
+                
         time.sleep(0.5) 
         
         klient.close()
